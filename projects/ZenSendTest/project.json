@@ -1,0 +1,17 @@
+{
+  "version":"1.0.0",
+
+  "dependencies":{
+     "ZenSend":"",
+     "xunit": {"version": "2.1.0-*", "type":"dev"},
+     "xunit.runner.dnx": {"version": "2.1.0-*", "type":"dev"}
+  },
+
+  "commands": {
+      "test": "xunit.runner.dnx"
+  },
+ 
+  "frameworks": {
+    "dnx451":{}
+  }
+}
