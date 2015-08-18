@@ -60,14 +60,7 @@ To install ZenSend API, run the following command in the [Package Manager Consol
 
     Console.WriteLine(prices) // => System.Collections.Generic.Dictionary`2[System.String,System.Decimal]
     Console.WriteLine(string.Join(";", prices.Select(x => x.Key + "=" + x.Value))) // => GB=100.0 (price in pence)
-    ```
-
-    ```javascript
-    var zensend = require('zensend');
-    var client = new zensend.Client("api_key");
-    client.getPrices(function(error, prices){
-      console.log(prices); // => { GB: 100 } (price in pence)
-    });
+    
 
 
 ## Check Balance
