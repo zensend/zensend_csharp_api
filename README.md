@@ -1,7 +1,5 @@
 # ZenSend DotNet Bindings
 
-## Introduction
-
 ZenSend DotNet bindings for sending SMS messages and performing operator lookups. You can sign up for an account at https://zensend.io/
 
 ## Installation
