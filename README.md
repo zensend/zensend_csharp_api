@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/zensend/zensend_csharp_api.svg?branch=master)](https://travis-ci.org/zensend/zensend_csharp_api)
+
 # ZenSend DotNet Bindings
 
 ZenSend DotNet bindings for sending SMS messages and performing operator lookups. You can sign up for an account at https://zensend.io/
