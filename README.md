@@ -12,7 +12,7 @@ To install ZenSend API, run the following command in the [Package Manager Consol
 
 ## Sending SMS
 
-    using ZendSend;
+    using ZenSend;
 
     var client = new Client("api_key");
     var result = client.SendSms(originator: "SPINTOWIN", body: "Welcome to spin to win", numbers: new string[]{"4477111222333", "4477222333444"});
@@ -34,7 +34,7 @@ To install ZenSend API, run the following command in the [Package Manager Consol
       client.SendSms(originator: "SPINTOWIN", body: "Welcome to spin to win", numbers: new string[]{"4477111222333", "4477222333444"});
     } catch (System.Net.WebException e) {
       Console.WriteLine(e); // see https://msdn.microsoft.com/en-us/library/system.net.webexception(v=vs.110).aspx
-    } catch (ZendSendException e) {
+    } catch (ZenSendException e) {
       Console.WriteLine(e.HttpStatus); // => http status code
       Console.WriteLine(e.FailCode); // => zensend error code (might be null)
       Console.WriteLine(e.Parameter); // => the parameter the failcode is related to (might be null)
@@ -42,7 +42,7 @@ To install ZenSend API, run the following command in the [Package Manager Consol
 
 ## Operator Lookup
 
-    using ZendSend;
+    using ZenSend;
 
     var client = new Client("api_key");
     var response = client.LookupOperator("441234567890");
@@ -55,7 +55,7 @@ To install ZenSend API, run the following command in the [Package Manager Consol
 
 ## SMS Prices
 
-    using ZendSend;
+    using ZenSend;
 
     var client = new Client("api_key");
     var prices = client.GetPrices();
@@ -67,7 +67,7 @@ To install ZenSend API, run the following command in the [Package Manager Consol
 
 ## Check Balance
 
-    using ZendSend;
+    using ZenSend;
 
     var client = new Client("api_key");
     var balance = client.CheckBalance();
