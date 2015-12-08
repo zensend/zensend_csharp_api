@@ -1,11 +1,13 @@
 {
-  "version":"1.0.0",
+  "version":"1.0.1",
 
   "dependencies":{
      "Newtonsoft.Json":"6.0.8"
   },
  
   "frameworks": {
-    "dnx451":{}
+    "dnx451":{},
+    "net45":{},
+    "net40":{}
   }
 }

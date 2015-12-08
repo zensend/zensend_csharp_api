@@ -109,5 +109,5 @@ Install [DNX](https://github.com/aspnet/homebrew-dnx)
 ## Tests
 
     cd projects/ZenSendTest
-    dnx . test
+    dnx test
  
