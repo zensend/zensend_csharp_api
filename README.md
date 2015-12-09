@@ -8,7 +8,7 @@ ZenSend DotNet bindings for sending SMS messages and performing operator lookups
 
 To install ZenSend API, run the following command in the [Package Manager Console](http://docs.nuget.org/consume/package-manager-console)
 
-    PM> Install-Package ZenSend -Version 1.0.1
+    PM> Install-Package ZenSend
 
 ## Sending SMS
 
