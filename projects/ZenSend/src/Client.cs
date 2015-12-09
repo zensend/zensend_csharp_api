@@ -60,7 +60,7 @@ namespace ZenSend {
         client.Headers.Add("X-API-KEY", this.apiKey);
         try {
           var json = client.DownloadString(url);
-          return ParseResult<T>(HttpStatusCode.OK, json, client.ResponseHeaders[HttpRequestHeader.ContentType]);
+          return ParseResult<T>(HttpStatusCode.OK, json, client.ResponseHeaders[HttpResponseHeader.ContentType]);
         } catch (WebException e) {
           if (e.Status == WebExceptionStatus.ProtocolError) {
             return ProcessException<T>(e);
@@ -79,7 +79,7 @@ namespace ZenSend {
         try {
           var bytes = client.UploadValues(this.server + "/v3/sendsms", postParams);
 
-          return ParseResult<T>(HttpStatusCode.OK, Encoding.UTF8.GetString(bytes), client.ResponseHeaders[HttpRequestHeader.ContentType]);
+          return ParseResult<T>(HttpStatusCode.OK, Encoding.UTF8.GetString(bytes), client.ResponseHeaders[HttpResponseHeader.ContentType]);
         } catch (WebException e) {
 
           if (e.Status == WebExceptionStatus.ProtocolError) {
@@ -95,7 +95,7 @@ namespace ZenSend {
     private T ProcessException<T>(WebException e) {
       var response = e.Response as HttpWebResponse;
       var body = ResponseBodyToString(response);
-      return ParseResult<T>(response.StatusCode, body, response.Headers[HttpRequestHeader.ContentType]);      
+      return ParseResult<T>(response.StatusCode, body, response.Headers[HttpResponseHeader.ContentType]);      
     }
     
     private string ResponseBodyToString(HttpWebResponse response) {
