@@ -14,10 +14,31 @@ namespace ZenSend {
   public class Client {
     private readonly string apiKey;
     private readonly string server;
+    private readonly string verifyServer;
     
-    public Client(string apiKey, string server = "https://api.zensend.io") {
+    public Client(string apiKey, string server = "https://api.zensend.io", string verifyServer = "https://verify.zensend.io") {
       this.apiKey = apiKey;
       this.server = server;
+      this.verifyServer = verifyServer;
+    }
+
+
+    public string CreateMsisdnVerification(string number, string message = null, string originator = null) {
+      var postParams = new NameValueCollection();
+      postParams.Add("NUMBER", number);
+      if (message != null) {
+        postParams.Add("MESSAGE", message);
+      }
+      if (originator != null) {
+        postParams.Add("ORIGINATOR", originator);
+      }
+
+      var result = UploadValues<CreateMsisdnVerificationResult>(this.verifyServer + "/api/msisdn_verify", postParams);
+      return result.session;
+    }
+
+    public string MsisdnVerificationStatus(string session) {
+      return Get<MsisdnVerificationStatusResult>(this.verifyServer + "/api/msisdn_verify?SESSION=" + WebUtility.UrlEncode(session)).msisdn;
     }
 
     public OperatorLookupResult LookupOperator(string number) {
@@ -156,10 +177,19 @@ namespace ZenSend {
       [JsonProperty("prices_in_pence")]
       public Dictionary<string, decimal> pricesInPence;
     }
+
     private class JsonBalanceResult {
       public decimal balance;
     }
     
+    private class CreateMsisdnVerificationResult {
+      public string session;
+    }
+
+    private class MsisdnVerificationStatusResult {
+      public string msisdn;
+    }
+
     private class JsonError {
       public string parameter;
       public string failcode;

@@ -202,7 +202,7 @@ namespace ZenSendTest
 
         }        
  
-         [Fact]
+        [Fact]
         public void HandleNonJsonResponseTest() {
 
             server.SetResponse("text/plain", 503, "Gateway Timeout");
@@ -217,8 +217,40 @@ namespace ZenSendTest
             Assert.Equal(null, e.Parameter);
             
 
+        }
+
+        [Fact]
+        public void CreateMsisdnVerificationTest() {
+            server.SetResponse("application/json", 200, @"{""success"": {""session"":""SESS""}}");
+            var client = new Client("apikey", server.Url, server.Url);
+            var r = client.CreateMsisdnVerification("441234567890");
+            Assert.Equal("SESS", r);
+            Assert.Equal("NUMBER=441234567890", server.LastBodyAsString);
+
         }  
-               
+
+        [Fact]
+        public void CreateMsisdnVerificationWithOptionsTest() {
+            server.SetResponse("application/json", 200, @"{""success"": {""session"":""SESS""}}");
+            var client = new Client("apikey", server.Url, server.Url);
+            var r = client.CreateMsisdnVerification("441234567890", "message", "orig");
+            Assert.Equal("SESS", r);
+            Assert.Equal("NUMBER=441234567890&MESSAGE=message&ORIGINATOR=orig", server.LastBodyAsString);
+
+        }
+
+        [Fact]
+        public void MsisdnVerificationStatusTest() {
+            server.SetResponse("application/json", 200, @"{""success"": {""msisdn"":""441234567890""}}");
+            var client = new Client("apikey", server.Url, server.Url);
+
+            var r = client.MsisdnVerificationStatus("SESS");
+            Assert.Equal("441234567890", r);
+            var collection = server.LastRequest.QueryString;
+            Assert.Equal("SESS", collection["SESSION"]);
+        }
+
+
         public void Dispose() {
             server.Dispose();
         }
