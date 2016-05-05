@@ -74,6 +74,46 @@ namespace ZenSendTest
         }
 
         [Fact]
+        public void CreateKeywordTest()
+        {
+            
+            server.SetResponse("application/json", 200, @"
+{""success"":{""cost_in_pence"":12.34, ""new_balance_in_pence"":10.2}}");
+            
+            var client = new Client("apikey", server.Url);
+            var result = client.CreateKeyword(shortcode: "SC", keyword: "KW");
+            
+
+            Assert.Equal(12.34m, result.CostInPence);
+            Assert.Equal(10.2m, result.NewBalanceInPence);
+            Assert.Equal("apikey", server.LastRequest.Headers["X-API-KEY"]);
+            Assert.Equal("application/x-www-form-urlencoded", server.LastRequest.Headers["content-type"]);
+            Assert.Equal("SHORTCODE=SC&KEYWORD=KW&IS_STICKY=false", server.LastBodyAsString);
+            
+            
+        }
+
+        [Fact]
+        public void CreateKeywordWithOptionsTest()
+        {
+            
+            server.SetResponse("application/json", 200, @"
+{""success"":{""cost_in_pence"":12.34, ""new_balance_in_pence"":10.2}}");
+            
+            var client = new Client("apikey", server.Url);
+            var result = client.CreateKeyword(shortcode: "SC", keyword: "KW", is_sticky: true, mo_url: "http://mo");
+            
+
+            Assert.Equal(12.34m, result.CostInPence);
+            Assert.Equal(10.2m, result.NewBalanceInPence);
+            Assert.Equal("apikey", server.LastRequest.Headers["X-API-KEY"]);
+            Assert.Equal("application/x-www-form-urlencoded", server.LastRequest.Headers["content-type"]);
+            Assert.Equal("SHORTCODE=SC&KEYWORD=KW&IS_STICKY=true&MO_URL=http%3a%2f%2fmo", server.LastBodyAsString);
+            
+            
+        }
+
+        [Fact]
         public void SendSmsPoundTest()
         {
             
