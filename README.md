@@ -110,4 +110,11 @@ Install [DNX](https://github.com/aspnet/homebrew-dnx)
 
     cd projects/ZenSendTest
     dnx test
- 
+
+
+## Release
+
+1. Edit projects/ZenSend/project.json
+2. Tag
+3. `dnu pack`
+4. Upload to NUGet
