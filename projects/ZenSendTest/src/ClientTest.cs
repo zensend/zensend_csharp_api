@@ -33,6 +33,8 @@ namespace ZenSendTest
                                 { "GB", 1.23m }, 
                                 { "US", 1.24m }
                              }, client.GetPrices());
+            Assert.Equal("/v3/prices", server.LastRequest.Url.AbsolutePath);
+
         }
 
         [Fact]
@@ -48,7 +50,8 @@ namespace ZenSendTest
             var client = new Client("apikey", server.Url);
             Assert.Equal(100.4m, client.CheckBalance());
             Assert.Equal("apikey", server.LastRequest.Headers["X-API-KEY"]);
-            
+            Assert.Equal("/v3/checkbalance", server.LastRequest.Url.AbsolutePath);
+
         }
 
         [Fact]
@@ -69,7 +72,25 @@ namespace ZenSendTest
             Assert.Equal("apikey", server.LastRequest.Headers["X-API-KEY"]);
             Assert.Equal("application/x-www-form-urlencoded", server.LastRequest.Headers["content-type"]);
             Assert.Equal("BODY=bODY&ORIGINATOR=orig&NUMBERS=447796354848%2c447796354847", server.LastBodyAsString);
+            Assert.Equal("/v3/sendsms", server.LastRequest.Url.AbsolutePath);
             
+            
+        }
+
+        [Fact]
+        public void CreateSubAccountTest()
+        {
+            
+            server.SetResponse("application/json", 200, @"
+{""success"":{""name"":""Name"",""api_key"":""ApiKey""}}");
+            
+            var client = new Client("apikey", server.Url);
+            var result = client.CreateSubAccount(name: "Name");
+
+            Assert.Equal("Name", result.Name);
+            Assert.Equal("ApiKey", result.ApiKey);
+            Assert.Equal("/v3/sub_accounts", server.LastRequest.Url.AbsolutePath);
+
             
         }
 
@@ -130,6 +151,8 @@ namespace ZenSendTest
 
             var collection = server.LastRequest.QueryString;
             Assert.Equal("441234567890", collection["NUMBER"]);
+            Assert.Equal("/v3/operator_lookup", server.LastRequest.Url.AbsolutePath);
+
         }  
 
         [Fact]
@@ -226,6 +249,7 @@ namespace ZenSendTest
             var r = client.CreateMsisdnVerification("441234567890");
             Assert.Equal("SESS", r);
             Assert.Equal("NUMBER=441234567890", server.LastBodyAsString);
+            Assert.Equal("/api/msisdn_verify", server.LastRequest.Url.AbsolutePath);
 
         }  
 
@@ -248,6 +272,9 @@ namespace ZenSendTest
             Assert.Equal("441234567890", r);
             var collection = server.LastRequest.QueryString;
             Assert.Equal("SESS", collection["SESSION"]);
+
+            Assert.Equal("/api/msisdn_verify", server.LastRequest.Url.AbsolutePath);
+
         }
 
 
