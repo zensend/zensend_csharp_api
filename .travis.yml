@@ -17,4 +17,4 @@ install: curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/script
 
 
 script:
-  cd projects/ZenSendTest && dotnet restore && dotnet test
+  cd projects/ZenSendTest && ~/.dotnet/dotnet restore && ~/.dotnet/dotnet test
