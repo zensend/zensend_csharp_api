@@ -1,8 +1,10 @@
 language: csharp
+sudo: required
 mono:
- - beta
+ - 4.2.3
 
-install: curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | sh && source ~/.dnx/dnvm/dnvm.sh && dnvm upgrade
+install: curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh | bash /dev/stdin --version latest
+
 
 script:
-  cd projects/ZenSendTest && dnu restore && dnx test
+  cd projects/ZenSendTest && dotnet restore && dotnet test
