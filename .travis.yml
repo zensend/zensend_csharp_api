@@ -2,6 +2,7 @@ language: csharp
 sudo: required
 mono:
  - 4.2.3
+dist: trusty
 
 install: curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh | bash /dev/stdin --version latest
 
