@@ -74,6 +74,17 @@ To install ZenSend API, run the following command in the [Package Manager Consol
 
     Console.WriteLine(balance) // => 500.0 (balance in pence)
 
+
+## Create Sub Account
+
+    using ZenSend;
+
+    var client = new Client("api_key");
+    var result = client.CreateSubAccount("sub account");
+
+    Console.WriteLine(result.apiKey) // => skj02j2jlkd0s9uk13j
+    Console.WriteLine(result.name) // => sub account
+
 ## Developing
 
 ### OSX
@@ -91,7 +102,7 @@ Install [DNX](https://github.com/aspnet/homebrew-dnx)
 
 ## Example 
 
-    csharp -r:bin/Debug/dnx451/ZenSend.dll -r:$HOME/.dnx/packages/Newtonsoft.Json/6.0.8/lib/net45/Newtonsoft.Json.dll
+    csharp -r:bin/Debug/dnx451/ZenSend.dll -r:$HOME/.dnx/packages/Newtonsoft.Json/8.0.1/lib/net45/Newtonsoft.Json.dll
 
     using ZenSend;
     var client = new Client("h5IDtEL05ky6FWqc9MCA0g", "http://localhost:8084");

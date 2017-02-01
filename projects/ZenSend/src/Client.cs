@@ -45,6 +45,14 @@ namespace ZenSend {
       return Get<OperatorLookupResult>(this.server + "/v3/operator_lookup?NUMBER=" + WebUtility.UrlEncode(number));
     }
     
+    public CreateSubAccountResult CreateSubAccount(string name) {
+      var postParams = new NameValueCollection();
+      postParams.Add("NAME", name);
+
+      return UploadValues<CreateSubAccountResult>(this.server + "/v3/sub_accounts", postParams);
+
+    }
+
     public SmsResult SendSms(string originator, string body, string[] numbers, OriginatorType? originatorType = null, int? timeToLiveInMinutes = null, SmsEncoding? encoding = null) {
       
       assertNoCommas(numbers);
@@ -98,7 +106,7 @@ namespace ZenSend {
         client.Headers.Add("X-API-KEY", this.apiKey);
         
         try {
-          var bytes = client.UploadValues(this.server + "/v3/sendsms", postParams);
+          var bytes = client.UploadValues(url, postParams);
 
           return ParseResult<T>(HttpStatusCode.OK, Encoding.UTF8.GetString(bytes), client.ResponseHeaders[HttpResponseHeader.ContentType]);
         } catch (WebException e) {
