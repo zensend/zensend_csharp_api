@@ -107,12 +107,12 @@ Install [DotNetCore](https://www.microsoft.com/net/core#macos)
 ## Tests
 
     cd projects/ZenSendTest
-    dnx test
+    dotnet test
 
 
 ## Release
 
-1. Edit projects/ZenSend/project.json
+1. Edit projects/ZenSend/ZenSend.csproj
 2. Tag
-3. `dnu pack`
+3. `dotnet pack`
 4. Upload to NUGet
