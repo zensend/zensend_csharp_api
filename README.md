@@ -78,16 +78,14 @@ To install ZenSend API, run the following command in the [Package Manager Consol
 
 ### OSX
 
-Install [DNX](https://github.com/aspnet/homebrew-dnx)
-
-    brew tap aspnet/dnx
-    brew install dnvm
+Install [DotNetCore](https://www.microsoft.com/net/core#macos)
 
 ## Building
+(currently we can only do the full build on a Windows machine. Requires dotnet 4.5.1 and 4.6.2 retargetting packages)
 
-    dnu restore
+    dotnet restore
     cd projects/ZenSend
-    dnu pack
+    dotnet pack
 
 ## Example 
 
