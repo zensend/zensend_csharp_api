@@ -1,12 +1,11 @@
 using Newtonsoft.Json;
 using System.Net;
-using System.Collections.Specialized;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
-using System.Net;
-
 
 namespace ZenSend {
   
@@ -24,13 +23,13 @@ namespace ZenSend {
 
 
     public string CreateMsisdnVerification(string number, string message = null, string originator = null) {
-      var postParams = new NameValueCollection();
-      postParams.Add("NUMBER", number);
+      var postParams = new List<KeyValuePair<string, string>>();
+      postParams.Add(new KeyValuePair<string,string>("NUMBER", number));
       if (message != null) {
-        postParams.Add("MESSAGE", message);
+        postParams.Add(new KeyValuePair<string,string>("MESSAGE", message));
       }
       if (originator != null) {
-        postParams.Add("ORIGINATOR", originator);
+        postParams.Add(new KeyValuePair<string,string>("ORIGINATOR", originator));
       }
 
       var result = UploadValues<CreateMsisdnVerificationResult>(this.verifyServer + "/api/msisdn_verify", postParams);
@@ -48,18 +47,18 @@ namespace ZenSend {
     public SmsResult SendSms(string originator, string body, string[] numbers, OriginatorType? originatorType = null, int? timeToLiveInMinutes = null, SmsEncoding? encoding = null) {
       
       assertNoCommas(numbers);
-      var postParams = new NameValueCollection();
-      postParams.Add("BODY", body);
-      postParams.Add("ORIGINATOR", originator);
+      var postParams = new List<KeyValuePair<string, string>>();
+      postParams.Add(new KeyValuePair<string,string>("BODY", body));
+      postParams.Add(new KeyValuePair<string,string>("ORIGINATOR", originator));
       if (originatorType.HasValue) {
-        postParams.Add("ORIGINATOR_TYPE", ToString(originatorType.Value));
+        postParams.Add(new KeyValuePair<string,string>("ORIGINATOR_TYPE", ToString(originatorType.Value)));
       }
-      postParams.Add("NUMBERS", string.Join(",", numbers));
+      postParams.Add(new KeyValuePair<string,string>("NUMBERS", string.Join(",", numbers)));
       if (timeToLiveInMinutes.HasValue) {
-        postParams.Add("TIMETOLIVE", timeToLiveInMinutes.Value.ToString());
+        postParams.Add(new KeyValuePair<string,string>("TIMETOLIVE", timeToLiveInMinutes.Value.ToString()));
       }
       if (encoding.HasValue) {
-        postParams.Add("ENCODING", ToString(encoding.Value));
+        postParams.Add(new KeyValuePair<string,string>("ENCODING", ToString(encoding.Value)));
       }
       
       return UploadValues<SmsResult>(this.server + "/v3/sendsms", postParams);
@@ -77,58 +76,29 @@ namespace ZenSend {
     }
     
     private T Get<T>(string url) {
-      using (var client = new WebClient()) {
-        client.Headers.Add("X-API-KEY", this.apiKey);
-        try {
-          var json = client.DownloadString(url);
-          return ParseResult<T>(HttpStatusCode.OK, json, client.ResponseHeaders[HttpResponseHeader.ContentType]);
-        } catch (WebException e) {
-          if (e.Status == WebExceptionStatus.ProtocolError) {
-            return ProcessException<T>(e);
-          } else {
-            throw;
-          }         
-        } 
+      using (var client = new HttpClient()) {
+        client.DefaultRequestHeaders.Add("X-API-KEY", this.apiKey);
+        var response = client.GetAsync(url).Result;
+        var json = response.Content.ReadAsStringAsync().Result;
+        return ParseResult<T>(response.StatusCode, json, response.Content.Headers.ContentType);
       }     
     }
-    private T UploadValues<T>(string url, NameValueCollection postParams) {
-      using (var client = new WebClient()) {
+    private T UploadValues<T>(string url, IEnumerable<KeyValuePair<string, string>> postParams) {
+      using (var client = new HttpClient()) {
 
-        client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-        client.Headers.Add("X-API-KEY", this.apiKey);
-        
-        try {
-          var bytes = client.UploadValues(this.server + "/v3/sendsms", postParams);
-
-          return ParseResult<T>(HttpStatusCode.OK, Encoding.UTF8.GetString(bytes), client.ResponseHeaders[HttpResponseHeader.ContentType]);
-        } catch (WebException e) {
-
-          if (e.Status == WebExceptionStatus.ProtocolError) {
-            return ProcessException<T>(e);
-          } else {
-            throw;
-          }
-        }
+        client.DefaultRequestHeaders.Add("X-API-KEY", this.apiKey);
+         
+        var response = client.PostAsync(this.server + "/v3/sendsms", new FormUrlEncodedContent(postParams)).Result;
+        var bytes = response.Content.ReadAsByteArrayAsync().Result;
+        return ParseResult<T>(response.StatusCode, Encoding.UTF8.GetString(bytes, 0, bytes.Length), response.Content.Headers.ContentType);
       }
               
     }
     
-    private T ProcessException<T>(WebException e) {
-      var response = e.Response as HttpWebResponse;
-      var body = ResponseBodyToString(response);
-      return ParseResult<T>(response.StatusCode, body, response.Headers[HttpResponseHeader.ContentType]);      
-    }
     
-    private string ResponseBodyToString(HttpWebResponse response) {
-      using (Stream stream = response.GetResponseStream()) {
-        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-        return  reader.ReadToEnd();
-      }
-    }
-    
-    private T ParseResult<T>(HttpStatusCode status, string json, string contentType) {
+    private T ParseResult<T>(HttpStatusCode status, string json, MediaTypeHeaderValue contentType) {
       
-      if (contentType != null && contentType.Contains("application/json")) {
+      if (contentType != null && contentType.MediaType.Contains("application/json")) {
         var result = JsonConvert.DeserializeObject<JsonResult<T>>(json);
         
         if (result.failure != null) {

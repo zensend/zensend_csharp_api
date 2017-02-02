@@ -1,4 +1,4 @@
-using Xunit;
+﻿using Xunit;
 using System;
 using ZenSend;
 using System.Net;
@@ -68,7 +68,7 @@ namespace ZenSendTest
             Assert.Equal("gsm", result.Encoding);
             Assert.Equal("apikey", server.LastRequest.Headers["X-API-KEY"]);
             Assert.Equal("application/x-www-form-urlencoded", server.LastRequest.Headers["content-type"]);
-            Assert.Equal("BODY=bODY&ORIGINATOR=orig&NUMBERS=447796354848%2c447796354847", server.LastBodyAsString);
+            Assert.Equal("BODY=bODY&ORIGINATOR=orig&NUMBERS=447796354848%2C447796354847", server.LastBodyAsString);
             
             
         }
@@ -85,7 +85,7 @@ namespace ZenSendTest
             
 
             Assert.Equal("application/x-www-form-urlencoded", server.LastRequest.Headers["content-type"]);
-            Assert.Equal("BODY=%c2%a3pound&ORIGINATOR=orig&NUMBERS=447796354848%2c447796354847", server.LastBodyAsString);
+            Assert.Equal("BODY=%C2%A3pound&ORIGINATOR=orig&NUMBERS=447796354848%2C447796354847", server.LastBodyAsString);
             
             
         }
@@ -107,7 +107,7 @@ namespace ZenSendTest
             Assert.Equal("gsm", result.Encoding);
             Assert.Equal("apikey", server.LastRequest.Headers["X-API-KEY"]);
             Assert.Equal("application/x-www-form-urlencoded", server.LastRequest.Headers["content-type"]);
-            Assert.Equal("BODY=bODY&ORIGINATOR=orig&ORIGINATOR_TYPE=alpha&NUMBERS=447796354848%2c447796354847&TIMETOLIVE=60&ENCODING=gsm", server.LastBodyAsString);
+            Assert.Equal("BODY=bODY&ORIGINATOR=orig&ORIGINATOR_TYPE=alpha&NUMBERS=447796354848%2C447796354847&TIMETOLIVE=60&ENCODING=gsm", server.LastBodyAsString);
         
             
         }
@@ -173,8 +173,9 @@ namespace ZenSendTest
 
             var e = Assert.Throws<ZenSendException>(() => client.SendSms(originator: "orig", body: "bODY", numbers: new string[]{"447796354848", "447796354847"}));
             
-            Assert.Equal(HttpStatusCode.BadRequest, e.HttpStatus);
+            
             Assert.Equal("GENERIC_ERROR", e.FailCode);
+            Assert.Equal(HttpStatusCode.BadRequest, e.HttpStatus);
             Assert.Equal(null, e.Parameter);
             
 
