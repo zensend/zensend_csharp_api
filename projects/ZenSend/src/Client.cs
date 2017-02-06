@@ -44,6 +44,20 @@ namespace ZenSend {
       return Get<OperatorLookupResult>(this.server + "/v3/operator_lookup?NUMBER=" + WebUtility.UrlEncode(number));
     }
     
+    public CreateKeywordResult CreateKeyword(string shortcode, string keyword, bool is_sticky = false, string mo_url = null) {
+      var postParams = new NameValueCollection();
+      postParams.Add("SHORTCODE", shortcode);
+      postParams.Add("KEYWORD", keyword);
+      postParams.Add("IS_STICKY", is_sticky ? "true" : "false");
+
+      if (mo_url != null) {
+        postParams.Add("MO_URL", mo_url);
+      }
+
+      return UploadValues<CreateKeywordResult>(this.server + "/v3/keywords", postParams);
+    }
+
+
     public SmsResult SendSms(string originator, string body, string[] numbers, OriginatorType? originatorType = null, int? timeToLiveInMinutes = null, SmsEncoding? encoding = null) {
       
       assertNoCommas(numbers);
